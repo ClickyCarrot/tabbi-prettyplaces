@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tabbi</title>
+		<link rel="icon" type="image/x-icon" href="core/assets/icon/favicon.ico" />
+
+		<link rel="stylesheet" href="./core/css/styles.css" />
+	</head>
+	<body>
+		<header id="topBar">
+			<h1>Tabbi</h1>
+		</header>
+		<!-- Home overlay -->
+		<div id="homeOverlay">
+			<div class="homeCard">
+				<h1 class="homeTitle">Tabbi</h1>
+				<p class="homeSubtitle">A pet care game</p>
+				<div class="homeActions">
+					<button id="homeNewGame">New Game</button>
+					<button id="homeContinue">Continue</button>
+					<button id="homeSettings">Settings</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="tutorialOverlay" class="hidden" style="display: none">
+			<div class="tutorialCard">
+				<div class="tutorialHeader">
+					<h2 id="tutorialTitle">Welcome to Tabbi</h2>
+					<button id="tutorialSkip" class="ghost">Skip</button>
+				</div>
+				<div class="tutorialBody">
+					<p id="tutorialText"></p>
+					<p id="tutorialHint" class="tutorialHint"></p>
+				</div>
+				<div class="tutorialActions">
+					<button id="tutorialBack">Back</button>
+					<button id="tutorialNext">Next</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- New Game Overlay -->
+		<div id="newGameOverlay" class="hidden" style="display: none">
+			<div class="newGameCard">
+				<h2>Choose Your Pet</h2>
+				<div class="petSelection">
+					<button id="prevPet" class="navBtn">&lt;</button>
+					<div class="petPreview">
+						<canvas id="previewCanvas" width="120" height="120"></canvas>
+					</div>
+					<button id="nextPet" class="navBtn">&gt;</button>
+				</div>
+				<div class="nameInputContainer">
+					<input type="text" id="newPetName" placeholder="Pet Name" />
+					<div id="newPetNameError" class="inputHint"></div>
+				</div>
+				<div class="tutorialToggle">
+					<label class="toggleRow">
+						<input type="checkbox" id="tutorialEnabled" checked />
+						Enable tutorial
+					</label>
+				</div>
+				<div class="newGameActions">
+					<button id="startGameBtn">Start Game</button>
+					<button id="cancelNewGameBtn">Back</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- New Game Confirmation Overlay -->
+		<div id="newGameConfirmOverlay" class="hidden" style="display: none">
+			<div class="settingsCard" style="max-width: 400px; text-align: center">
+				<h2>New Game?</h2>
+				<p style="margin: 20px 0; color: #ddd">
+					Are you sure you want to start a new game? Any current progress will be lost.
+				</p>
+				<div class="settingsActions" style="justify-content: center; gap: 15px">
+					<button id="confirmNewGameYes">Yes, New Game</button>
+					<button id="confirmNewGameNo">Cancel</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Settings overlay -->
+		<div id="settingsOverlay" class="hidden" style="display: none">
+			<div class="settingsCard scrollArea">
+				<h2>Settings</h2>
+				<div class="settingsContent">
+					<!-- Add settings controls here -->
+					<p>
+						<label> Enable autosave <input type="checkbox" id="autosaveEnabled" /> </label>
+					</p>
+					<p>
+						<label> Show autosave toasts <input type="checkbox" id="autosaveToasts" /> </label>
+					</p>
+					<p>
+						<label>
+							Autosave interval (seconds):
+							<input type="number" id="autosaveIntervalSeconds" min="1" step="1" />
+						</label>
+					</p>
+					<div id="settingsMessage" class="inputHint"></div>
+					<div class="settingsDivider"></div>
+					<div class="settingsSection reportSection bottomPanelCard is-open">
+						<button class="bottomPanelTitle" data-panel="reports" aria-expanded="true">
+							Reports
+						</button>
+						<div class="bottomPanelContent reportContent">
+							<p class="settingsHint">Generate an activity report from your recent gameplay.</p>
+							<label class="reportRow">
+								Entries
+								<select id="reportLimit">
+									<option value="10">10</option>
+									<option value="20">20</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+									<option value="all">All</option>
+								</select>
+							</label>
+							<label class="reportRow"
+								><input type="checkbox" id="reportCare" checked /> Care</label
+							>
+							<label class="reportRow"
+								><input type="checkbox" id="reportShop" checked /> Shop</label
+							>
+							<label class="reportRow">
+								<input type="checkbox" id="reportMinigame" checked /> Minigames</label
+							>
+							<label class="reportRow"
+								><input type="checkbox" id="reportCoach" checked /> Coach</label
+							>
+							<label class="reportRow">
+								Report Type
+								<select id="reportType">
+									<option value="summary">Summary</option>
+									<option value="detailed">Detailed Log</option>
+								</select>
+							</label>
+							<button id="generateReport">Generate Report</button>
+							<div id="reportMessage" class="reportMessage"></div>
+							<div id="reportOutput" class="reportOutput"></div>
+						</div>
+					</div>
+					<div class="settingsDivider"></div>
+					<div class="settingsSection saveTransferSection">
+						<h3>Save Transfer</h3>
+						<p class="settingsHint">Export a .tabbi save file or import one from another device.</p>
+						<div class="settingsActionRow">
+							<button id="exportSaveBtn">Export Save</button>
+							<button id="importSaveBtn">Import Save</button>
+							<input id="importSaveInput" type="file" accept=".tabbi,application/json" />
+						</div>
+					</div>
+				</div>
+				<div class="settingsActions">
+					<button id="settingsReset">Reset Defaults</button>
+					<button id="settingsBack">Back</button>
+					<button id="deleteSaveBtn">Delete Save</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Delete Save Confirmation Overlay -->
+		<div id="deleteSaveConfirmOverlay" class="hidden" style="display: none">
+			<div class="settingsCard" style="max-width: 400px; text-align: center">
+				<h2>Delete Save?</h2>
+				<p style="margin: 20px 0; color: #ddd">
+					Are you sure you want to delete your save file? This cannot be undone.
+				</p>
+				<div class="settingsActions" style="justify-content: center; gap: 15px">
+					<button id="confirmDeleteYes" style="background-color: #d9534f; color: white">
+						Yes, Delete
+					</button>
+					<button id="confirmDeleteNo">Cancel</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="minigameOverlay" class="hidden" style="display: none">
+			<div class="minigameCard">
+				<h2 id="minigameTitle">Click Challenge</h2>
+				<p id="minigameInfo" style="margin: 12px 0; color: #ddd">
+					Click as fast as you can for 15 seconds. Earn $1 per click.
+				</p>
+				<div id="minigameHud" class="minigameHud">
+					<div>
+						<span id="minigameHudLeftLabel">Time</span>:
+						<span id="minigameHudLeftValue">15</span>
+					</div>
+					<div>
+						<span id="minigameHudRightLabel">Clicks</span>:
+						<span id="minigameHudRightValue">0</span>
+					</div>
+				</div>
+				<div id="minigameArena" class="minigameArena">
+					<canvas id="minigameCanvas" width="960" height="540"></canvas>
+					<button id="minigameTarget" class="minigameTarget">Tap!</button>
+				</div>
+				<div class="minigameActions">
+					<button id="startMinigame">Start</button>
+					<button id="closeMinigame">Close</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="gameOverlay" class="scrollArea">
+			<div id="gameContainer">
+				<div id="leftColumn">
+					<button id="btnHome">Menu</button>
+					<!-- Left Panel: Stats -->
+					<div id="leftPanel">
+						<h2>Pet Stats</h2>
+						<hr />
+						<div id="stats"></div>
+					</div>
+				</div>
+
+				<!-- Canvas -->
+				<div id="canvasContainer">
+					<canvas id="gameCanvas" width="720" height="540"></canvas>
+					<div id="thoughtBubble" class="thoughtBubble hidden" aria-live="polite"></div>
+					<!-- Pet name and type displayed in canvas via JS -->
+				</div>
+			</div>
+
+			<!-- Bottom Panel: Collapsible panels -->
+			<div id="bottomPanel">
+				<div class="bottomPanelCard">
+					<button class="bottomPanelTitle" data-panel="care" aria-expanded="false">Care</button>
+					<div class="bottomPanelContent">
+						<button id="btnFeed">Feed</button>
+						<button id="btnPlay">Play</button>
+						<button id="btnRest">Rest</button>
+						<button id="btnClean">Clean</button>
+					</div>
+				</div>
+
+				<div class="bottomPanelCard">
+					<button class="bottomPanelTitle" data-panel="shop" aria-expanded="false">Shop</button>
+					<div class="bottomPanelContent">
+						<button id="buyFood">Buy Food ($5)</button>
+						<button id="buyToy">Buy Toy ($10)</button>
+						<button id="buyBed">Buy Bed ($15)</button>
+						<button id="buySoap">Buy Soap ($8)</button>
+					</div>
+				</div>
+
+				<div class="bottomPanelCard">
+					<button class="bottomPanelTitle" data-panel="inventory" aria-expanded="false">
+						Inventory
+					</button>
+					<div class="bottomPanelContent" id="inventoryList"></div>
+				</div>
+
+				<div class="bottomPanelCard">
+					<button class="bottomPanelTitle" data-panel="minigames" aria-expanded="false">
+						Minigames
+					</button>
+					<div class="bottomPanelContent">
+						<button id="btnClickMinigame">Click Challenge</button>
+						<button id="btnTargetMinigame">Target Practice</button>
+						<button id="btnCatchMinigame">Coin Catch</button>
+						<button id="btnFlappyMinigame">Flappy Flight</button>
+						<button id="btnSnakeMinigame">Snake Sprint</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Toast Notification -->
+		<div id="toastContainer"></div>
+
+		<!-- ES Modules entry -->
+		<script type="module" src="./core/js/main.js"></script>
+	</body>
+</html>
